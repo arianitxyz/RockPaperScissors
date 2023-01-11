@@ -7,7 +7,7 @@ def check_play():
     valid_responses = ['yes', 'no']
     while True:
         try:
-            response = input(print("Do you want to play again> Yes / No"))
+            response = input("Do you want to play again> Yes / No\n")
             if response.casefold() not in valid_responses:
                 raise ValueError("Yes or No only!")
             if response.casefold() == "yes":
@@ -22,11 +22,11 @@ def check_play():
 
 
 def play_rps():
-    choices = ["r", "p", "s"]
+    choices = ["r", "p", "s", ]
     play = True
 
     while play:
-        player_choice = input(print_possible_choices()).casefold()
+        player_choice = input(print_possible_choices())
 
         if not re.match("[RrSsPp]", player_choice):
             print_possible_choices()
@@ -44,8 +44,7 @@ def print_choice(player: str, player_input: str):
 
 
 def print_possible_choices():
-    return print("Please input one of the options for your move: "
-                 "\n R. Rock \n P. Paper \n S. Scissors")
+    return "Please input one of the options for your move: \n R. Rock \n P. Paper \n S. Scissors\n"
 
 
 def validate_game(comp_choice, player_choice):
