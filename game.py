@@ -1,73 +1,50 @@
 import random
-import re  # regex to check if the player input is in the regex
-import os
 
 
-def check_play():
+def replay(response: str) -> bool:
     valid_responses = ['yes', 'no']
-    while True:
-        try:
-            response = input("Do you want to play again> Yes / No\n")
-            if response.casefold() not in valid_responses:
-                raise ValueError("Yes or No only!")
-            if response.casefold() == "yes":
-                return True
-            else:
-                os.system("cls" if os.name == "nt" else "clear")
-                print("Thanks for playing")
-                exit()
 
-        except ValueError as error:
-            print(error)
+    if response.casefold() not in valid_responses or response.casefold() == 'no':
+        return False
+    if response.casefold() == "yes":
+        return True
 
 
-def play_rps():
-    choices = ["r", "p", "s", ]
-    play = True
-
-    while play:
-        player_choice = input(print_possible_choices())
-
-        if not re.match("[RrSsPp]", player_choice):
-            print_possible_choices()
-            continue
-        print_choice("Player", player_choice)
-
-        comp_choice = random.choice(choices)
-        print_choice("Computer", comp_choice)
-
-        play = validate_game(comp_choice, player_choice)
-
-
-def print_choice(player: str, player_input: str) -> str:
-    print(f"{player}s choice was ", player_input)
-
-
-def print_possible_choices():
-    return "Please input one of the options for your move: \n R. Rock \n P. Paper \n S. Scissors\n"
-
-
-def validate_game(comp_choice, player_choice):
-    if player_choice == comp_choice:
-        print("Tie since both players chose ", player_choice)
-        play = check_play()
-    elif comp_choice == 'r' and player_choice == 's':
-        print_game_result("Computer", comp_choice, player_choice)
-        play = check_play()
-    elif comp_choice == 's' and player_choice == 'p':
-        print_game_result("Computer", comp_choice, player_choice)
-        play = check_play()
-    elif comp_choice == 'p' and player_choice == 'r':
-        print_game_result("Computer", comp_choice, player_choice)
-        play = check_play()
+def validate(player: str, opponent: str) -> str:
+    if player == opponent:
+        return f'nobody wins {player} = {opponent}'
+    elif opponent == 'r' and player == 's':
+        return f'opponent wins: {opponent} > {player}'
+    elif opponent == 's' and player == 'p':
+        return f'opponent wins: {opponent} > {player}'
+    elif opponent == 'p' and player == 'r':
+        return f'opponent wins: {opponent} > {player}'
     else:
-        print_game_result("Player", player_choice, comp_choice)
-        play = check_play()
-    return play
+        return f'player wins: {player} > {opponent}'
 
 
-def print_game_result(winner: str, winner_input: str, loser_input: str):
-    print(f"{winner} wins since {winner_input} beats {loser_input}")
+def play(player: str, opponent: str, is_random: bool) -> str:
+    options = ['r', 'p', 's']
+    if is_random:
+        player = random.choice(options)
+        opponent = random.choice(options)
+    return validate(player, opponent)
 
 
-play_rps()
+def play_with_computer(player: str, is_random: bool) -> str:
+    options = ['r', 'p', 's']
+    if is_random:
+        opponent = random.choice(options)
+    return validate(player, opponent)
+
+
+def play():
+    options = ['r', 'p', 's']
+    is_playing = True
+    while is_playing:
+        player = str(input('Enter r p s '))
+        if player in options:
+            print(play_with_computer(player, True))
+            is_playing = replay(input('Play again?'))
+        else:
+            continue
